@@ -1,12 +1,21 @@
 [project]
 name = "rapidobj-play"
 version = "0.1.0"
-description = "Add your description here"
+description = "Fast OBJ parser with Python bindings"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "numpy",
     "pymeshlab",
 ]
+
+[build-system]
+requires = ["scikit-build-core>=0.10", "nanobind>=2.4.0"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
 
 [tool.uv.sources]
 pymeshlab = { path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" }
