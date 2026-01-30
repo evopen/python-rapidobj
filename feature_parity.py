@@ -45,6 +45,7 @@ robj_vertices = result.vertices
 robj_faces = result.faces
 robj_texcoord_pool = result.texcoords
 robj_texcoord_indices = result.wedge_texcoord_indices
+robj_material_ids = result.wedge_material_ids  # NEW: Per-wedge material IDs
 
 # Unwrap to per-wedge format
 robj_wedge_texcoords = robj_texcoord_pool[robj_texcoord_indices]
@@ -54,6 +55,7 @@ print(f"  Faces: {robj_faces.shape}")
 print(f"  Texcoord pool: {robj_texcoord_pool.shape} (unique UVs)")
 print(f"  Texcoord indices: {robj_texcoord_indices.shape}")
 print(f"  Wedge texcoords: {robj_wedge_texcoords.shape} (after unwrapping)")
+print(f"  Wedge material IDs: {robj_material_ids.shape} (unique: {set(robj_material_ids)})") 
 
 # --- Compare ---
 print("=" * 60)
@@ -114,14 +116,33 @@ if pml_wedge_texcoords.shape == robj_wedge_texcoords.shape:
 else:
     print("  ✗ Shape mismatch")
 
+# Material/Texture IDs
+print("\n[Material/Texture IDs]")
+print(f"  PyMeshLab texture IDs: {pml_texture_ids.shape} (unique: {set(pml_texture_ids)})")
+print(f"  RapidObj material IDs: {robj_material_ids.shape} (unique: {set(robj_material_ids)})")
+if pml_texture_ids.shape == robj_material_ids.shape:
+    if np.array_equal(pml_texture_ids, robj_material_ids):
+        print("  ✓ Material/Texture IDs MATCH exactly")
+    else:
+        print("  ⚠ Material/Texture IDs differ (may be due to different triangulation)")
+        # Check if same set of IDs present
+        if set(pml_texture_ids) == set(robj_material_ids):
+            print("  ✓ Same set of material IDs used")
+else:
+    print("  ✗ Shape mismatch")
+
+
 print("\n" + "=" * 60)
 print("SUMMARY:")
 print("  ✓ Vertices: Should match exactly")
 print("  ✓ Triangle count: Should match")
 print("  ✓ Unique UVs: Should match")
+print("  ✓ Material/Texture IDs: Now properly exposed for multi-texture support")
 print("  ⚠ Face order: May differ (triangulation algorithm)")
 print("  ⚠ Wedge texcoord order: May differ (follows face order)")
 print()
 print("NOTE: pymeshlab's wedge_tex_coord_index_array() returns")
 print("  TEXTURE/MATERIAL IDs (0, 1), not texcoord indices!")
+print("  RapidObj now exposes this via wedge_material_ids property")
 print("=" * 60)
+

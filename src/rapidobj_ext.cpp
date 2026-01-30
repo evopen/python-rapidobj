@@ -15,6 +15,7 @@ struct ObjData {
   rapidobj::Result result;
   std::vector<int> faces;                  // flat: [v0,v1,v2, ...]
   std::vector<int> wedge_texcoord_indices; // per-wedge index into texcoords
+  std::vector<int> wedge_material_ids;     // per-wedge material ID
   std::vector<std::string> texture_paths;
 
   bool ok() const { return !result.error; }
@@ -46,12 +47,29 @@ static ObjData *parse_obj_internal(const std::string &filename) {
   }
   data->faces.reserve(total_indices);
   data->wedge_texcoord_indices.reserve(total_indices);
+  data->wedge_material_ids.reserve(total_indices);
 
-  // Build flattened face and wedge texcoord index arrays
+  // Build flattened face, wedge texcoord index, and material ID arrays
   for (const auto &shape : data->result.shapes) {
-    for (const auto &index : shape.mesh.indices) {
+    const auto &mesh = shape.mesh;
+    size_t face_idx = 0;
+
+    for (size_t i = 0; i < mesh.indices.size(); ++i) {
+      const auto &index = mesh.indices[i];
+
       data->faces.push_back(index.position_index);
       data->wedge_texcoord_indices.push_back(index.texcoord_index);
+
+      // Each face has 3 vertices (after triangulation), so divide by 3 to get
+      // face index
+      int material_id =
+          mesh.material_ids.empty() ? -1 : mesh.material_ids[face_idx];
+      data->wedge_material_ids.push_back(material_id);
+
+      // Move to next face every 3 vertices
+      if ((i + 1) % 3 == 0) {
+        face_idx++;
+      }
     }
   }
 
@@ -116,6 +134,13 @@ public:
         data->wedge_texcoord_indices.data(),
         {data->wedge_texcoord_indices.size()}, owner);
   }
+
+  // Return wedge material IDs - points to our flattened vector
+  nb::ndarray<nb::numpy, int, nb::shape<-1>> wedge_material_ids() {
+    return nb::ndarray<nb::numpy, int, nb::shape<-1>>(
+        data->wedge_material_ids.data(), {data->wedge_material_ids.size()},
+        owner);
+  }
 };
 
 ObjParseResult parse_obj(const std::string &filename) {
@@ -141,6 +166,8 @@ NB_MODULE(rapidobj_ext, m) {
                    nb::rv_policy::reference)
       .def_prop_ro("wedge_texcoord_indices",
                    &ObjParseResult::wedge_texcoord_indices,
+                   nb::rv_policy::reference)
+      .def_prop_ro("wedge_material_ids", &ObjParseResult::wedge_material_ids,
                    nb::rv_policy::reference);
 
   m.def("parse_obj", &parse_obj, nb::arg("filename"),

@@ -7,6 +7,10 @@ requires-python = ">=3.12"
 dependencies = [
     "numpy",
     "pymeshlab",
+    "pytorch3d",
+    "torch==2.8.0",
+    "torchvision>=0.23.0",
+    "typer-slim>=0.21.1",
 ]
 
 [build-system]
@@ -19,3 +23,15 @@ build-dir = "build/{wheel_tag}"
 
 [tool.uv.sources]
 pymeshlab = { path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" }
+torch = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
+torchvision = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
+pytorch3d = { git = "https://github.com/facebookresearch/pytorch3d.git" }
+
+[tool.uv.extra-build-dependencies]
+pytorch3d = ["torch"]
+
+
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
