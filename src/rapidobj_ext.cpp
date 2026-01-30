@@ -5,115 +5,116 @@
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/vector.h>
 
-#include <iostream>
 #include <vector>
 
 namespace nb = nanobind;
 
-// Internal storage struct using std::vector
+// Keep the rapidobj::Result alive - it owns all the data
+// We only need to build the flattened face/wedge arrays
 struct ObjData {
-  bool ok = false;
-  std::string error_message;
-  int vertex_count = 0;
-  int normal_count = 0;
-  int uv_count = 0;
-  int shape_count = 0;
-  int material_count = 0;
-  std::vector<std::string> texture_paths;
-  std::vector<float> vertices;             // flat: [x0,y0,z0, x1,y1,z1, ...]
-  std::vector<int> faces;                  // flat: [v0,v1,v2, v0,v1,v2, ...]
-  std::vector<float> texcoords;            // flat: [u0,v0, u1,v1, ...]
+  rapidobj::Result result;
+  std::vector<int> faces;                  // flat: [v0,v1,v2, ...]
   std::vector<int> wedge_texcoord_indices; // per-wedge index into texcoords
+  std::vector<std::string> texture_paths;
+
+  bool ok() const { return !result.error; }
+  std::string error_message() const {
+    return result.error ? result.error.code.message() : "";
+  }
 };
 
-static ObjData parse_obj_internal(const std::string &filename) {
-  ObjData data;
-  auto m = rapidobj::ParseFile(filename);
-  data.ok = !m.error;
+static ObjData *parse_obj_internal(const std::string &filename) {
+  auto *data = new ObjData();
+  data->result = rapidobj::ParseFile(filename);
 
-  if (!data.ok) {
-    data.error_message = m.error.code.message();
+  if (data->result.error) {
     return data;
   }
 
-  data.vertex_count = static_cast<int>(m.attributes.positions.size() / 3);
-  data.normal_count = static_cast<int>(m.attributes.normals.size() / 3);
-  data.uv_count = static_cast<int>(m.attributes.texcoords.size() / 2);
-  data.shape_count = static_cast<int>(m.shapes.size());
-  data.material_count = static_cast<int>(m.materials.size());
-
-  for (const auto &material : m.materials) {
-    data.texture_paths.push_back(material.diffuse_texname);
+  // Collect texture paths from materials
+  for (const auto &material : data->result.materials) {
+    data->texture_paths.push_back(material.diffuse_texname);
   }
 
-  // Copy vertices
-  data.vertices.assign(m.attributes.positions.begin(),
-                       m.attributes.positions.end());
+  // Triangulate in place
+  rapidobj::Triangulate(data->result);
 
-  // Triangulate first
-  rapidobj::Triangulate(m);
+  // Pre-allocate faces and wedge indices
+  size_t total_indices = 0;
+  for (const auto &shape : data->result.shapes) {
+    total_indices += shape.mesh.indices.size();
+  }
+  data->faces.reserve(total_indices);
+  data->wedge_texcoord_indices.reserve(total_indices);
 
-  // Copy texcoords
-  data.texcoords.assign(m.attributes.texcoords.begin(),
-                        m.attributes.texcoords.end());
-
-  // Copy face indices and wedge texcoord indices
-  for (const auto &shape : m.shapes) {
+  // Build flattened face and wedge texcoord index arrays
+  for (const auto &shape : data->result.shapes) {
     for (const auto &index : shape.mesh.indices) {
-      data.faces.push_back(index.position_index);
-      data.wedge_texcoord_indices.push_back(index.texcoord_index);
+      data->faces.push_back(index.position_index);
+      data->wedge_texcoord_indices.push_back(index.texcoord_index);
     }
   }
 
   return data;
 }
 
-// Python-exposed class that wraps ObjData and returns ndarrays
+// Python-exposed class that wraps ObjData with capsule ownership
 class ObjParseResult {
 public:
-  ObjData data;
+  ObjData *data;
+  nb::capsule owner;
 
-  ObjParseResult(ObjData &&d) : data(std::move(d)) {}
+  ObjParseResult(ObjData *d)
+      : data(d), owner(d, [](void *p) noexcept { delete (ObjData *)p; }) {}
 
-  bool ok() const { return data.ok; }
-  std::string error_message() const { return data.error_message; }
-  int vertex_count() const { return data.vertex_count; }
-  int normal_count() const { return data.normal_count; }
-  int uv_count() const { return data.uv_count; }
-  int shape_count() const { return data.shape_count; }
-  int material_count() const { return data.material_count; }
+  bool ok() const { return data->ok(); }
+  std::string error_message() const { return data->error_message(); }
+
+  int vertex_count() const {
+    return static_cast<int>(data->result.attributes.positions.size() / 3);
+  }
+  int normal_count() const {
+    return static_cast<int>(data->result.attributes.normals.size() / 3);
+  }
+  int uv_count() const {
+    return static_cast<int>(data->result.attributes.texcoords.size() / 2);
+  }
+  int shape_count() const {
+    return static_cast<int>(data->result.shapes.size());
+  }
+  int material_count() const {
+    return static_cast<int>(data->result.materials.size());
+  }
   const std::vector<std::string> &texture_paths() const {
-    return data.texture_paths;
+    return data->texture_paths;
   }
 
-  // Return vertices as numpy array with shape (N, 3)
+  // Return vertices - ZERO COPY, points directly to rapidobj's Array
   nb::ndarray<nb::numpy, float, nb::shape<-1, 3>> vertices() {
-    size_t n_vertices = data.vertices.size() / 3;
+    size_t n_vertices = data->result.attributes.positions.size() / 3;
     return nb::ndarray<nb::numpy, float, nb::shape<-1, 3>>(
-        data.vertices.data(), {n_vertices, 3},
-        nb::handle() // no owner - prevent deallocation
-    );
+        data->result.attributes.positions.data(), {n_vertices, 3}, owner);
   }
 
-  // Return faces as numpy array with shape (N, 3)
+  // Return faces - points to our flattened vector
   nb::ndarray<nb::numpy, int, nb::shape<-1, 3>> faces() {
-    size_t n_faces = data.faces.size() / 3;
-    return nb::ndarray<nb::numpy, int, nb::shape<-1, 3>>(
-        data.faces.data(), {n_faces, 3}, nb::handle());
+    size_t n_faces = data->faces.size() / 3;
+    return nb::ndarray<nb::numpy, int, nb::shape<-1, 3>>(data->faces.data(),
+                                                         {n_faces, 3}, owner);
   }
 
-  // Return texcoords as numpy array with shape (N, 2)
+  // Return texcoords - ZERO COPY, points directly to rapidobj's Array
   nb::ndarray<nb::numpy, float, nb::shape<-1, 2>> texcoords() {
-    size_t n_texcoords = data.texcoords.size() / 2;
+    size_t n_texcoords = data->result.attributes.texcoords.size() / 2;
     return nb::ndarray<nb::numpy, float, nb::shape<-1, 2>>(
-        data.texcoords.data(), {n_texcoords, 2}, nb::handle());
+        data->result.attributes.texcoords.data(), {n_texcoords, 2}, owner);
   }
 
-  // Return wedge texcoord indices as numpy array with shape (N*3,)
+  // Return wedge texcoord indices - points to our flattened vector
   nb::ndarray<nb::numpy, int, nb::shape<-1>> wedge_texcoord_indices() {
     return nb::ndarray<nb::numpy, int, nb::shape<-1>>(
-        data.wedge_texcoord_indices.data(),
-        {data.wedge_texcoord_indices.size()}, nb::handle());
+        data->wedge_texcoord_indices.data(),
+        {data->wedge_texcoord_indices.size()}, owner);
   }
 };
 
@@ -134,14 +135,13 @@ NB_MODULE(rapidobj_ext, m) {
       .def_prop_ro("material_count", &ObjParseResult::material_count)
       .def_prop_ro("texture_paths", &ObjParseResult::texture_paths)
       .def_prop_ro("vertices", &ObjParseResult::vertices,
-                   nb::rv_policy::reference_internal)
-      .def_prop_ro("faces", &ObjParseResult::faces,
-                   nb::rv_policy::reference_internal)
+                   nb::rv_policy::reference)
+      .def_prop_ro("faces", &ObjParseResult::faces, nb::rv_policy::reference)
       .def_prop_ro("texcoords", &ObjParseResult::texcoords,
-                   nb::rv_policy::reference_internal)
+                   nb::rv_policy::reference)
       .def_prop_ro("wedge_texcoord_indices",
                    &ObjParseResult::wedge_texcoord_indices,
-                   nb::rv_policy::reference_internal);
+                   nb::rv_policy::reference);
 
   m.def("parse_obj", &parse_obj, nb::arg("filename"),
         "Parse an OBJ file and return the result");
