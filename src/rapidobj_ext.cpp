@@ -20,8 +20,10 @@ struct ObjData {
   int shape_count = 0;
   int material_count = 0;
   std::vector<std::string> texture_paths;
-  std::vector<float> vertices; // flat: [x0,y0,z0, x1,y1,z1, ...]
-  std::vector<int> faces;      // flat: [v0,v1,v2, v0,v1,v2, ...]
+  std::vector<float> vertices;             // flat: [x0,y0,z0, x1,y1,z1, ...]
+  std::vector<int> faces;                  // flat: [v0,v1,v2, v0,v1,v2, ...]
+  std::vector<float> texcoords;            // flat: [u0,v0, u1,v1, ...]
+  std::vector<int> wedge_texcoord_indices; // per-wedge index into texcoords
 };
 
 static ObjData parse_obj_internal(const std::string &filename) {
@@ -51,10 +53,15 @@ static ObjData parse_obj_internal(const std::string &filename) {
   // Triangulate first
   rapidobj::Triangulate(m);
 
-  // Copy face indices (position indices only for triangulated mesh)
+  // Copy texcoords
+  data.texcoords.assign(m.attributes.texcoords.begin(),
+                        m.attributes.texcoords.end());
+
+  // Copy face indices and wedge texcoord indices
   for (const auto &shape : m.shapes) {
     for (const auto &index : shape.mesh.indices) {
       data.faces.push_back(index.position_index);
+      data.wedge_texcoord_indices.push_back(index.texcoord_index);
     }
   }
 
@@ -94,6 +101,20 @@ public:
     return nb::ndarray<nb::numpy, int, nb::shape<-1, 3>>(
         data.faces.data(), {n_faces, 3}, nb::handle());
   }
+
+  // Return texcoords as numpy array with shape (N, 2)
+  nb::ndarray<nb::numpy, float, nb::shape<-1, 2>> texcoords() {
+    size_t n_texcoords = data.texcoords.size() / 2;
+    return nb::ndarray<nb::numpy, float, nb::shape<-1, 2>>(
+        data.texcoords.data(), {n_texcoords, 2}, nb::handle());
+  }
+
+  // Return wedge texcoord indices as numpy array with shape (N*3,)
+  nb::ndarray<nb::numpy, int, nb::shape<-1>> wedge_texcoord_indices() {
+    return nb::ndarray<nb::numpy, int, nb::shape<-1>>(
+        data.wedge_texcoord_indices.data(),
+        {data.wedge_texcoord_indices.size()}, nb::handle());
+  }
 };
 
 ObjParseResult parse_obj(const std::string &filename) {
@@ -115,6 +136,11 @@ NB_MODULE(rapidobj_ext, m) {
       .def_prop_ro("vertices", &ObjParseResult::vertices,
                    nb::rv_policy::reference_internal)
       .def_prop_ro("faces", &ObjParseResult::faces,
+                   nb::rv_policy::reference_internal)
+      .def_prop_ro("texcoords", &ObjParseResult::texcoords,
+                   nb::rv_policy::reference_internal)
+      .def_prop_ro("wedge_texcoord_indices",
+                   &ObjParseResult::wedge_texcoord_indices,
                    nb::rv_policy::reference_internal);
 
   m.def("parse_obj", &parse_obj, nb::arg("filename"),

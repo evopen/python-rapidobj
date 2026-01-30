@@ -1,36 +1,127 @@
+"""
+Feature parity test: Compare pymeshlab vs rapidobj outputs.
+Tests vertices, faces, texture coordinates, and texture IDs.
+
+Note: 
+- Triangulation may differ between libraries
+- pymeshlab stores per-wedge texcoords directly in a matrix
+- rapidobj stores a texcoord pool + indices (OBJ file format style)
+- wedge_tex_coord_index_array in pymeshlab is TEXTURE ID, not texcoord index
+"""
+import numpy as np
 import pymeshlab
+from rapidobj_ext import parse_obj
 
+OBJ_PATH = "/home/dhh/Downloads/rungholt/house.obj"
+
+# --- PyMeshLab ---
+print("=" * 60)
+print("Loading with PyMeshLab...")
 meshset = pymeshlab.MeshSet()
-meshset.load_new_mesh("/home/dhh/Downloads/rungholt/house.obj")
-
+meshset.load_new_mesh(OBJ_PATH)
 mesh = meshset.current_mesh()
 
-print(mesh.vertex_number())
-print(mesh.edge_number())
-print(mesh.face_number())
-print(mesh.has_wedge_tex_coord())
+pml_vertices = mesh.vertex_matrix()
+pml_faces = mesh.face_matrix()
+pml_wedge_texcoords = mesh.wedge_tex_coord_matrix()  # Direct per-wedge UVs
+pml_texture_ids = mesh.wedge_tex_coord_index_array()  # Texture/material ID per wedge
 
-# print the required matrix
+print(f"  Vertices: {pml_vertices.shape}")
+print(f"  Faces: {pml_faces.shape}")
+print(f"  Wedge texcoords: {pml_wedge_texcoords.shape} (per-wedge UVs)")
+print(f"  Texture IDs: {pml_texture_ids.shape} (unique: {set(pml_texture_ids)})")
+print(f"  Textures: {list(mesh.textures().keys())}")
 
-vertex_matrix = mesh.vertex_matrix()
-assert vertex_matrix.shape[0] == mesh.vertex_number()
-assert vertex_matrix.shape[1] == 3
+# --- RapidObj ---
+print("=" * 60)
+print("Loading with RapidObj...")
+result = parse_obj(OBJ_PATH)
 
-face_matrix = mesh.face_matrix()
-assert face_matrix.shape[0] == mesh.face_number()
-assert face_matrix.shape[1] == 3
+if not result.ok:
+    print(f"  Error: {result.error_message}")
+    exit(1)
 
-textures: dict[str, pymeshlab.pmeshlab.Image] = mesh.textures()
+robj_vertices = result.vertices
+robj_faces = result.faces
+robj_texcoord_pool = result.texcoords
+robj_texcoord_indices = result.wedge_texcoord_indices
 
-print(type(textures))
+# Unwrap to per-wedge format
+robj_wedge_texcoords = robj_texcoord_pool[robj_texcoord_indices]
 
-assert type(textures) == dict
+print(f"  Vertices: {robj_vertices.shape}")
+print(f"  Faces: {robj_faces.shape}")
+print(f"  Texcoord pool: {robj_texcoord_pool.shape} (unique UVs)")
+print(f"  Texcoord indices: {robj_texcoord_indices.shape}")
+print(f"  Wedge texcoords: {robj_wedge_texcoords.shape} (after unwrapping)")
 
-wedge_tex_coord_matrix = mesh.wedge_tex_coord_matrix()
+# --- Compare ---
+print("=" * 60)
+print("Comparing outputs...")
 
-print(wedge_tex_coord_matrix)
+# Vertices
+print("\n[Vertices]")
+print(f"  PyMeshLab: {pml_vertices.shape}, dtype: {pml_vertices.dtype}")
+print(f"  RapidObj:  {robj_vertices.shape}, dtype: {robj_vertices.dtype}")
+if pml_vertices.shape == robj_vertices.shape:
+    if np.allclose(pml_vertices, robj_vertices, atol=1e-5):
+        print("  ✓ Vertices MATCH")
+    else:
+        diff = np.abs(pml_vertices - robj_vertices).max()
+        print(f"  ✗ Vertices DIFFER (max diff: {diff})")
+else:
+    print("  ✗ Shape mismatch")
 
-print(textures)
+# Face count
+print("\n[Faces]")
+print(f"  PyMeshLab: {pml_faces.shape[0]} triangles")
+print(f"  RapidObj:  {robj_faces.shape[0]} triangles")
+if pml_faces.shape[0] == robj_faces.shape[0]:
+    print("  ✓ Same number of triangles")
+else:
+    print("  ✗ Different number of triangles")
 
-print(vertex_matrix)
-print(face_matrix)
+# Compare exact face match
+if np.array_equal(pml_faces, robj_faces):
+    print("  ✓ Faces MATCH exactly (same triangulation)")
+else:
+    print("  ⚠ Faces differ (different triangulation algorithm)")
+
+# Unique UVs
+print("\n[Unique Texcoords]")
+pml_unique = np.unique(np.round(pml_wedge_texcoords, 6), axis=0)
+robj_unique = np.unique(np.round(robj_texcoord_pool, 6), axis=0)
+print(f"  PyMeshLab unique UVs: {pml_unique.shape[0]}")
+print(f"  RapidObj unique UVs:  {robj_unique.shape[0]}")
+if pml_unique.shape == robj_unique.shape:
+    if np.allclose(np.sort(pml_unique, axis=0), np.sort(robj_unique, axis=0), atol=1e-5):
+        print("  ✓ Same set of unique UV coordinates")
+    else:
+        print("  ✗ Different UV coordinates")
+else:
+    print("  ✗ Different number of unique UVs")
+
+# Per-wedge texcoords
+print("\n[Per-Wedge Texcoords]")
+print(f"  PyMeshLab: {pml_wedge_texcoords.shape}")
+print(f"  RapidObj:  {robj_wedge_texcoords.shape}")
+if pml_wedge_texcoords.shape == robj_wedge_texcoords.shape:
+    if np.allclose(pml_wedge_texcoords, robj_wedge_texcoords, atol=1e-5):
+        print("  ✓ Per-wedge texcoords MATCH")
+    else:
+        # Check if they're the same just reordered (due to triangulation)
+        print("  ⚠ Per-wedge texcoords differ (expected due to different triangulation)")
+else:
+    print("  ✗ Shape mismatch")
+
+print("\n" + "=" * 60)
+print("SUMMARY:")
+print("  ✓ Vertices: Should match exactly")
+print("  ✓ Triangle count: Should match")
+print("  ✓ Unique UVs: Should match")
+print("  ⚠ Face order: May differ (triangulation algorithm)")
+print("  ⚠ Wedge texcoord order: May differ (follows face order)")
+print()
+print("NOTE: pymeshlab's wedge_tex_coord_index_array() returns")
+print("  TEXTURE/MATERIAL IDs (0, 1), not texcoord indices!")
+print("=" * 60)

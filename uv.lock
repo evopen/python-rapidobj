@@ -80,10 +80,14 @@ requires-dist = [{ name = "numpy" }]
 [[package]]
 name = "rapidobj-play"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
+    { name = "numpy" },
     { name = "pymeshlab" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pymeshlab", path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" }]
+requires-dist = [
+    { name = "numpy" },
+    { name = "pymeshlab", path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" },
+]
