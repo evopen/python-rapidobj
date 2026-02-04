@@ -6,8 +6,10 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "numpy",
+    "polars>=1.37.1",
     "pymeshlab",
     "pytorch3d",
+    "safetensors>=0.7.0",
     "torch==2.8.0",
     "torchvision>=0.23.0",
     "typer-slim>=0.21.1",
