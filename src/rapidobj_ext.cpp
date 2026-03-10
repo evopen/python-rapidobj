@@ -144,10 +144,15 @@ public:
 };
 
 ObjParseResult parse_obj(const std::string &filename) {
-  return ObjParseResult(parse_obj_internal(filename));
+  ObjData *data = nullptr;
+  {
+    nb::gil_scoped_release release;
+    data = parse_obj_internal(filename);
+  }
+  return ObjParseResult(data);
 }
 
-NB_MODULE(rapidobj_ext, m) {
+NB_MODULE(rapidobj, m) {
   m.doc() = "Fast OBJ file parser using rapidobj";
 
   nb::class_<ObjParseResult>(m, "ObjParseResult")
