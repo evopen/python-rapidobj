@@ -47,17 +47,6 @@ wheels = [
 ]
 
 [[package]]
-name = "iopath"
-version = "0.1.10"
-source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }
-dependencies = [
-    { name = "portalocker" },
-    { name = "tqdm" },
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/72/73/b3d451dfc523756cf177d3ebb0af76dc7751b341c60e2a21871be400ae29/iopath-0.1.10.tar.gz", hash = "sha256:3311c16a4d9137223e20f141655759933e1eda24f8bff166af834af3c645ef01", size = 42226, upload-time = "2022-07-09T19:00:50.866Z" }
-
-[[package]]
 name = "jinja2"
 version = "3.1.6"
 source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }
@@ -435,18 +424,6 @@ wheels = [
 ]
 
 [[package]]
-name = "portalocker"
-version = "3.2.0"
-source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }
-dependencies = [
-    { name = "pywin32", marker = "sys_platform == 'win32'" },
-]
-sdist = { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/5e/77/65b857a69ed876e1951e88aaba60f5ce6120c33703f7cb61a3c894b8c1b6/portalocker-3.2.0.tar.gz", hash = "sha256:1f3002956a54a8c3730586c5c77bf18fae4149e07eaf1c29fc3faf4d5a3f89ac", size = 95644, upload-time = "2025-06-14T13:20:40.03Z" }
-wheels = [
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/4b/a6/38c8e2f318bf67d338f4d629e93b0b4b9af331f455f0390ea8ce4a099b26/portalocker-3.2.0-py3-none-any.whl", hash = "sha256:3cdc5f565312224bc570c49337bd21428bba0ef363bbcf58b9ef4a9f11779968", size = 22424, upload-time = "2025-06-14T13:20:38.083Z" },
-]
-
-[[package]]
 name = "pymeshlab"
 version = "2025.7"
 source = { path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" }
@@ -461,38 +438,17 @@ wheels = [
 requires-dist = [{ name = "numpy" }]
 
 [[package]]
-name = "pytorch3d"
-version = "0.7.9"
-source = { git = "https://github.com/facebookresearch/pytorch3d.git#cbcae096a0b9b04f7c515d11bb4285a82e96b8d7" }
-dependencies = [
-    { name = "iopath" },
-]
-
-[[package]]
-name = "pywin32"
-version = "311"
-source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }
-wheels = [
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/e7/ab/01ea1943d4eba0f850c3c61e78e8dd59757ff815ff3ccd0a84de5f541f42/pywin32-311-cp312-cp312-win32.whl", hash = "sha256:750ec6e621af2b948540032557b10a2d43b0cee2ae9758c54154d711cc852d31", size = 8706543, upload-time = "2025-07-14T20:13:20.765Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/d1/a8/a0e8d07d4d051ec7502cd58b291ec98dcc0c3fff027caad0470b72cfcc2f/pywin32-311-cp312-cp312-win_amd64.whl", hash = "sha256:b8c095edad5c211ff31c05223658e71bf7116daa0ecf3ad85f3201ea3190d067", size = 9495040, upload-time = "2025-07-14T20:13:22.543Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/ba/3a/2ae996277b4b50f17d61f0603efd8253cb2d79cc7ae159468007b586396d/pywin32-311-cp312-cp312-win_arm64.whl", hash = "sha256:e286f46a9a39c4a18b319c28f59b61de793654af2f395c102b4f819e584b5852", size = 8710102, upload-time = "2025-07-14T20:13:24.682Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/a5/be/3fd5de0979fcb3994bfee0d65ed8ca9506a8a1260651b86174f6a86f52b3/pywin32-311-cp313-cp313-win32.whl", hash = "sha256:f95ba5a847cba10dd8c4d8fefa9f2a6cf283b8b88ed6178fa8a6c1ab16054d0d", size = 8705700, upload-time = "2025-07-14T20:13:26.471Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/e3/28/e0a1909523c6890208295a29e05c2adb2126364e289826c0a8bc7297bd5c/pywin32-311-cp313-cp313-win_amd64.whl", hash = "sha256:718a38f7e5b058e76aee1c56ddd06908116d35147e133427e59a3983f703a20d", size = 9494700, upload-time = "2025-07-14T20:13:28.243Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/04/bf/90339ac0f55726dce7d794e6d79a18a91265bdf3aa70b6b9ca52f35e022a/pywin32-311-cp313-cp313-win_arm64.whl", hash = "sha256:7b4075d959648406202d92a2310cb990fea19b535c7f4a78d3f5e10b926eeb8a", size = 8709318, upload-time = "2025-07-14T20:13:30.348Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/c9/31/097f2e132c4f16d99a22bfb777e0fd88bd8e1c634304e102f313af69ace5/pywin32-311-cp314-cp314-win32.whl", hash = "sha256:b7a2c10b93f8986666d0c803ee19b5990885872a7de910fc460f9b0c2fbf92ee", size = 8840714, upload-time = "2025-07-14T20:13:32.449Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/90/4b/07c77d8ba0e01349358082713400435347df8426208171ce297da32c313d/pywin32-311-cp314-cp314-win_amd64.whl", hash = "sha256:3aca44c046bd2ed8c90de9cb8427f581c479e594e99b5c0bb19b29c10fd6cb87", size = 9656800, upload-time = "2025-07-14T20:13:34.312Z" },
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/c0/d2/21af5c535501a7233e734b8af901574572da66fcc254cb35d0609c9080dd/pywin32-311-cp314-cp314-win_arm64.whl", hash = "sha256:a508e2d9025764a8270f93111a970e1d0fbfc33f4153b388bb649b7eec4f9b42", size = 8932540, upload-time = "2025-07-14T20:13:36.379Z" },
-]
-
-[[package]]
-name = "rapidobj-play"
+name = "rapidobj"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "numpy" },
+]
+
+[package.dev-dependencies]
+dev = [
     { name = "polars" },
     { name = "pymeshlab" },
-    { name = "pytorch3d" },
     { name = "safetensors" },
     { name = "torch", version = "2.8.0", source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }, marker = "sys_platform != 'linux'" },
     { name = "torch", version = "2.8.0+cu129", source = { registry = "https://download.pytorch.org/whl/cu129" }, marker = "sys_platform == 'linux'" },
@@ -503,11 +459,12 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "numpy" },
+requires-dist = [{ name = "numpy" }]
+
+[package.metadata.requires-dev]
+dev = [
     { name = "polars", specifier = ">=1.37.1" },
     { name = "pymeshlab", path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" },
-    { name = "pytorch3d", git = "https://github.com/facebookresearch/pytorch3d.git" },
     { name = "safetensors", specifier = ">=0.7.0" },
     { name = "torch", marker = "sys_platform != 'linux'", specifier = "==2.8.0" },
     { name = "torch", marker = "sys_platform == 'linux'", specifier = "==2.8.0", index = "https://download.pytorch.org/whl/cu129" },
@@ -680,18 +637,6 @@ wheels = [
     { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:6226be1b8399ef655a11965ea4975250f7823fc9b200b35deb9eeac350c667a9" },
     { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:04316e24ddd1cee3b301208811a9d7c4cfca5f566ea367f33bda059d8f0e012e" },
     { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:c718f6d2c0e61feed39763925eea3e1f42979f6b21e61276f487409168d9e352" },
-]
-
-[[package]]
-name = "tqdm"
-version = "4.67.1"
-source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }
-dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
-]
-sdist = { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2", size = 169737, upload-time = "2024-11-24T20:12:22.481Z" }
-wheels = [
-    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/d0/30/dc54f88dd4a2b5dc8a0279bdd7270e735851848b762aeb1c1184ed1f6b14/tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2", size = 78540, upload-time = "2024-11-24T20:12:19.698Z" },
 ]
 
 [[package]]
