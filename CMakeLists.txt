@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18...3.27)
-project(rapidobj_ext LANGUAGES CXX)
+project(rapidobj LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -17,9 +17,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nanobind)
 
 # Build the extension module
-nanobind_add_module(rapidobj_ext src/rapidobj_ext.cpp)
+nanobind_add_module(rapidobj src/rapidobj_ext.cpp)
 
-target_include_directories(rapidobj_ext PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(rapidobj PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 # Install the extension module
-install(TARGETS rapidobj_ext LIBRARY DESTINATION .)
+install(TARGETS rapidobj LIBRARY DESTINATION .)

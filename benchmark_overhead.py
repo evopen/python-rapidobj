@@ -8,7 +8,7 @@ import time
 
 # Measure import time
 import_start = time.perf_counter()
-from rapidobj_ext import parse_obj
+from rapidobj import parse_obj
 import_elapsed = time.perf_counter() - import_start
 
 if len(sys.argv) < 2:

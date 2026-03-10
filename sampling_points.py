@@ -22,11 +22,11 @@ try:
 except ImportError:
     SAFETENSORS_AVAILABLE = False
 
-# Import rapidobj_ext
+# Import rapidobj
 try:
-    from rapidobj_ext import parse_obj
+    from rapidobj import parse_obj
 except ImportError:
-    print("Error: rapidobj_ext not found. Please ensure it is installed.")
+    print("Error: rapidobj not found. Please ensure it is installed.")
     sys.exit(1)
 
 

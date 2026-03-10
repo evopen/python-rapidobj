@@ -1,6 +1,6 @@
 import sys
 import time
-from rapidobj_ext import parse_obj
+from rapidobj import parse_obj
 
 
 def main():

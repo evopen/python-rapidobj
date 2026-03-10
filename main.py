@@ -1,5 +1,5 @@
 def main():
-    print("Hello from rapidobj-play!")
+    print("Hello from rapidobj!")
 
 
 if __name__ == "__main__":

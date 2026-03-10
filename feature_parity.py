@@ -10,7 +10,7 @@ Note:
 """
 import numpy as np
 import pymeshlab
-from rapidobj_ext import parse_obj
+from rapidobj import parse_obj
 
 OBJ_PATH = "/home/dhh/Downloads/rungholt/house.obj"
 
@@ -145,4 +145,3 @@ print("NOTE: pymeshlab's wedge_tex_coord_index_array() returns")
 print("  TEXTURE/MATERIAL IDs (0, 1), not texcoord indices!")
 print("  RapidObj now exposes this via wedge_material_ids property")
 print("=" * 60)
-
