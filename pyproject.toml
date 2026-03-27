@@ -26,16 +26,6 @@ Homepage = "https://github.com/dhh/rapidobj-play"
 Repository = "https://github.com/dhh/rapidobj-play"
 Issues = "https://github.com/dhh/rapidobj-play/issues"
 
-[dependency-groups]
-dev = [
-    "polars>=1.37.1",
-    "pymeshlab",
-    "safetensors>=0.7.0",
-    "torch==2.8.0",
-    "torchvision>=0.23.0",
-    "typer-slim>=0.21.1",
-]
-
 [build-system]
 requires = ["scikit-build-core>=0.12", "nanobind>=2.4.0"]
 build-backend = "scikit_build_core.build"
@@ -77,19 +67,8 @@ sdist.exclude = [
     "main.cpp",
     "main.py",
     "out.ipc",
-    "sampling_points.py",
     "uv.lock",
 ]
-
-[tool.uv.sources]
-torch = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
-torchvision = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
-
-
-[[tool.uv.index]]
-name = "pytorch-cu129"
-url = "https://download.pytorch.org/whl/cu129"
-explicit = true
 
 [tool.cibuildwheel]
 build = "cp312-* cp313-* cp314-*"
