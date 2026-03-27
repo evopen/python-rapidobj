@@ -31,6 +31,14 @@ requests validate the package, and version tags build Linux and Windows wheels
 for CPython 3.12, 3.13, and 3.14. Tag builds publish the validated artifacts
 to PyPI via Trusted Publishing after a strict version check.
 
+For releases, use the helper script so the package version and tag stay in
+lockstep:
+
+```bash
+uv run python scripts/release.py X.Y.Z
+git push origin HEAD vX.Y.Z
+```
+
 ## Minimal Usage
 
 ```python

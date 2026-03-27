@@ -9,6 +9,20 @@ Production releases must satisfy all of the following:
 - `[project].version` in `pyproject.toml` is `X.Y.Z`
 - `X.Y.Z` is not already published on PyPI
 
+Do not bump `pyproject.toml` and create tags as separate manual steps. Use the
+release script so the version bump, commit, and tag come from the same commit:
+
+```bash
+uv run python scripts/release.py X.Y.Z
+git push origin HEAD vX.Y.Z
+```
+
+Or let the script push both:
+
+```bash
+uv run python scripts/release.py X.Y.Z --push
+```
+
 ## Local Validation
 
 1. Clean old artifacts.
@@ -42,17 +56,17 @@ Production releases must satisfy all of the following:
 
 ## GitHub Source Release
 
-1. Push commit to `main`.
-2. Create and push tag.
-   - `git tag vX.Y.Z`
-   - `git push origin vX.Y.Z`
+1. Run the release script from a clean working tree.
+   - `uv run python scripts/release.py X.Y.Z`
+2. Push the release commit and tag.
+   - `git push origin HEAD vX.Y.Z`
 3. Wait for the release workflow to finish and download the generated artifacts if needed.
 4. Create GitHub release from the tag and include changelog notes.
 
 ## PyPI Publish
 
 1. Configure a Trusted Publisher for the repository on PyPI.
-2. Bump `[project].version` in `pyproject.toml`.
-3. Push a matching version tag (`vX.Y.Z`).
+2. Run the release script so `pyproject.toml` and the tag are created together.
+3. Push the resulting commit and matching version tag (`vX.Y.Z`).
 4. Wait for the `Release Artifacts` workflow to finish.
 5. Verify the package page and an install from PyPI.

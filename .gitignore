@@ -3,3 +3,4 @@ build/
 dist/
 benchmark
 *.ipc
+__pycache__
