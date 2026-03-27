@@ -12,18 +12,24 @@ stay efficient.
 
 ## Install
 
+From PyPI:
+
+```bash
+python -m pip install rapidobj
+```
+
 From source:
 
 ```bash
 uv sync
 uv build --wheel --python 3.12 --no-sources
-python -m pip install dist/rapidobj-0.1.0-cp312-cp312-*.whl
+python -m pip install dist/rapidobj-0.1.3-cp312-cp312-*.whl
 ```
 
 For release builds, GitHub Actions is the authoritative wheel pipeline. Pull
 requests validate the package, and version tags build Linux and Windows wheels
-for CPython 3.12, 3.13, and 3.14. Tag builds also publish the validated
-artifacts to TestPyPI via Trusted Publishing.
+for CPython 3.12, 3.13, and 3.14. Tag builds publish the validated artifacts
+to PyPI via Trusted Publishing after a strict version check.
 
 ## Minimal Usage
 
