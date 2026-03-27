@@ -426,16 +426,22 @@ wheels = [
 [[package]]
 name = "pymeshlab"
 version = "2025.7"
-source = { path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" }
+source = { registry = "https://mirrors4.bfsu.edu.cn/pypi/web/simple/" }
 dependencies = [
     { name = "numpy" },
 ]
 wheels = [
-    { filename = "pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl", hash = "sha256:762de8ff1205099a0d68b699792f837a676460006d838c83455186b2b02252ab" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/c5/34/4e55476f1494772e6c397204f5d48eeaeceb3ca9b774697566a568777acf/pymeshlab-2025.7-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:e989545ebbbe948da8497a389867ff58af7f9273d1731024b647ee85f9be36a7", size = 73839769, upload-time = "2025-07-22T12:33:52.234Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/ea/ce/40e6cf11a4a11e3f899584b6e78c63bb6b3f4faea9fcb21b0d9667f389d5/pymeshlab-2025.7-cp312-cp312-macosx_11_0_x86_64.whl", hash = "sha256:ca1b0dead7de4cfa50e6466b7456b5f60da79bd1d611fdd74c489703d9f2db48", size = 54869524, upload-time = "2025-07-22T12:34:01.563Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/37/66/a29eb9d54595144a9b059c45ace63c44296195b9897f5030050a38167fad/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_aarch64.whl", hash = "sha256:7a107e07d7f0c2cd061a405d14d5a817dccbd4eb03b3313fe585c03cc9cec01f", size = 65248869, upload-time = "2025-07-22T12:34:12.3Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/fe/62/b973a67eb48ba76cc33b249fdb8627c250d29600134dfab7137bca87dee4/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl", hash = "sha256:5444bc01e6091e358468ce8d886143d5340b6c49e852748e9606b72c822b4988", size = 106475642, upload-time = "2025-09-09T07:20:02.911Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/b7/70/afea7f74043ddc081d8f5f4120565f4e94c725bb0567023680c3182c2797/pymeshlab-2025.7-cp312-cp312-win_amd64.whl", hash = "sha256:ddaea3f02d5870d4b7039a87eb7b823a3a4c8bdc359a719298b081b103343c53", size = 55152452, upload-time = "2025-07-22T12:34:21.761Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/fb/9a/db7cf61785c0519db8465f14ca9931c4cc9c5f77afc75c45a2600af49943/pymeshlab-2025.7-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:ecca34167cf578c55505ef7ed0c9c84ebe2625e5ae73553750f6b073f2e7aae4", size = 73840460, upload-time = "2025-07-22T12:34:32.47Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/82/18/1636ee1c14ad6ae1b41616c87db010a5d77820c18318d28d74d2b294cdcf/pymeshlab-2025.7-cp313-cp313-macosx_11_0_x86_64.whl", hash = "sha256:58a4883ef32de729b0bc56234b54acbc3ab214f5ae01ce543ca8244163b52cdc", size = 54869433, upload-time = "2025-07-22T12:34:42.479Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/5e/e8/902ffa5f936f4d52dcaa22a946500b652be31adba79fefcb5eaad63041f5/pymeshlab-2025.7-cp313-cp313-manylinux_2_35_aarch64.whl", hash = "sha256:1b5c8fdc17454fc660b5b4d269342413c51a628b7af4f432137a625eaadea983", size = 65146711, upload-time = "2025-07-22T12:34:54.5Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/0d/64/9119d37ce4e3b40bb745e11313cf80717f42b1164c441ef8b1f5f9ea5a26/pymeshlab-2025.7-cp313-cp313-manylinux_2_35_x86_64.whl", hash = "sha256:8ae33f9162c77678cb6d7a608fa9f08ae3227813757b6131169eb414cb19d4ea", size = 106347180, upload-time = "2025-09-09T07:20:16.644Z" },
+    { url = "https://mirrors4.bfsu.edu.cn/pypi/web/packages/83/1b/32ad9c46245510d4271dbc4b56250559fe7773461f4bca87b1844ecf2a27/pymeshlab-2025.7-cp313-cp313-win_amd64.whl", hash = "sha256:9f24d181343b48174d221b5329b187f1425f481130c7f56fa542b2da54087cae", size = 55152437, upload-time = "2025-07-22T12:39:50.795Z" },
 ]
-
-[package.metadata]
-requires-dist = [{ name = "numpy" }]
 
 [[package]]
 name = "rapidobj"
@@ -464,7 +470,7 @@ requires-dist = [{ name = "numpy" }]
 [package.metadata.requires-dev]
 dev = [
     { name = "polars", specifier = ">=1.37.1" },
-    { name = "pymeshlab", path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" },
+    { name = "pymeshlab" },
     { name = "safetensors", specifier = ">=0.7.0" },
     { name = "torch", marker = "sys_platform != 'linux'", specifier = "==2.8.0" },
     { name = "torch", marker = "sys_platform == 'linux'", specifier = "==2.8.0", index = "https://download.pytorch.org/whl/cu129" },
@@ -595,9 +601,9 @@ dependencies = [
     { name = "torch", version = "2.8.0+cu129", source = { registry = "https://download.pytorch.org/whl/cu129" }, marker = "python_full_version < '3.15' and platform_machine == 'aarch64' and platform_python_implementation == 'CPython' and sys_platform == 'linux'" },
 ]
 wheels = [
-    { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:630f602db2c594c9cbc89b964d5fb4873adf4193805df65339b24cd3f4cf57f7" },
-    { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:20f7e25a24f91d93d09398b80929dec805c4ee2f5527fad8eecd6e43dc5fd5d0" },
-    { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:cb70cc000e6a398270044c3406a89ee8ab6157a4e81b5d40c5904e1d0e22e2f8" },
+    { url = "https://download-r2.pytorch.org/whl/cu129/torchvision-0.23.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:630f602db2c594c9cbc89b964d5fb4873adf4193805df65339b24cd3f4cf57f7" },
+    { url = "https://download-r2.pytorch.org/whl/cu129/torchvision-0.23.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:20f7e25a24f91d93d09398b80929dec805c4ee2f5527fad8eecd6e43dc5fd5d0" },
+    { url = "https://download-r2.pytorch.org/whl/cu129/torchvision-0.23.0-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:cb70cc000e6a398270044c3406a89ee8ab6157a4e81b5d40c5904e1d0e22e2f8" },
 ]
 
 [[package]]
@@ -634,9 +640,9 @@ dependencies = [
     { name = "torch", version = "2.8.0+cu129", source = { registry = "https://download.pytorch.org/whl/cu129" }, marker = "(python_full_version >= '3.15' and sys_platform == 'linux') or (platform_machine != 'aarch64' and sys_platform == 'linux') or (platform_python_implementation != 'CPython' and sys_platform == 'linux')" },
 ]
 wheels = [
-    { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:6226be1b8399ef655a11965ea4975250f7823fc9b200b35deb9eeac350c667a9" },
-    { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:04316e24ddd1cee3b301208811a9d7c4cfca5f566ea367f33bda059d8f0e012e" },
-    { url = "https://download.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:c718f6d2c0e61feed39763925eea3e1f42979f6b21e61276f487409168d9e352" },
+    { url = "https://download-r2.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:6226be1b8399ef655a11965ea4975250f7823fc9b200b35deb9eeac350c667a9" },
+    { url = "https://download-r2.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:04316e24ddd1cee3b301208811a9d7c4cfca5f566ea367f33bda059d8f0e012e" },
+    { url = "https://download-r2.pytorch.org/whl/cu129/torchvision-0.23.0%2Bcu129-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:c718f6d2c0e61feed39763925eea3e1f42979f6b21e61276f487409168d9e352" },
 ]
 
 [[package]]

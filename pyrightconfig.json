@@ -1,0 +1,18 @@
+{
+  "include": [
+    "rapidobj.pyi",
+    "examples",
+    "benchmark.py",
+    "benchmark_overhead.py"
+  ],
+  "exclude": [
+    "build",
+    "dist",
+    ".venv"
+  ],
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic",
+  "reportMissingModuleSource": "none"
+}

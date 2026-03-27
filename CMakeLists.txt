@@ -23,3 +23,10 @@ target_include_directories(rapidobj PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 # Install the extension module
 install(TARGETS rapidobj LIBRARY DESTINATION .)
+
+# Install typing metadata for IDE autocomplete and static checkers.
+install(FILES
+  ${CMAKE_SOURCE_DIR}/rapidobj.pyi
+  ${CMAKE_SOURCE_DIR}/py.typed
+  DESTINATION .
+)

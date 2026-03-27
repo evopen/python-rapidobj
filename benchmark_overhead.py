@@ -24,6 +24,7 @@ print(f"Iterations: {iterations}")
 print("-" * 50)
 
 times = []
+ret = None
 for i in range(iterations):
     start = time.perf_counter()
     ret = parse_obj(obj_path)
@@ -41,5 +42,7 @@ print(f"Average: {sum(times)/len(times):.2f} ms")
 print(f"Min: {min(times):.2f} ms")
 print(f"Max: {max(times):.2f} ms")
 print()
+if ret is None:
+    raise RuntimeError("No iterations were run")
 print(f"Vertices: {ret.vertices.shape}")
 print(f"Faces: {ret.faces.shape}")

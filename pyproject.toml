@@ -3,10 +3,26 @@ name = "rapidobj"
 version = "0.1.0"
 description = "Fast OBJ parser with Python bindings"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
 dependencies = [
     "numpy",
 ]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: C++",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/dhh/rapidobj-play"
+Repository = "https://github.com/dhh/rapidobj-play"
+Issues = "https://github.com/dhh/rapidobj-play/issues"
 
 [dependency-groups]
 dev = [
@@ -23,11 +39,46 @@ requires = ["scikit-build-core>=0.10", "nanobind>=2.4.0"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-minimum-version = "build-system.requires"
+minimum-version = "0.12"
 build-dir = "build/{wheel_tag}"
+sdist.inclusion-mode = "manual"
+sdist.include = [
+    "CMakeLists.txt",
+    "LICENSE",
+    "README.md",
+    "RELEASE.md",
+    "examples/parse_basic.py",
+    "examples/parse_error.py",
+    "py.typed",
+    "pyproject.toml",
+    "rapidobj.pyi",
+    "src/rapidobj.hpp",
+    "src/rapidobj_ext.cpp",
+]
+sdist.exclude = [
+    ".git/*",
+    ".envrc",
+    ".python-version",
+    ".venv/*",
+    ".venv/**",
+    "benchmark",
+    "benchmark.cpp",
+    "benchmark.py",
+    "benchmark_overhead.py",
+    "build/*",
+    "build/**",
+    "dist",
+    "dist/*",
+    "dist/**",
+    "feature_parity.py",
+    "main.cpp",
+    "main.py",
+    "out.ipc",
+    "sampling_points.py",
+    "uv.lock",
+]
 
 [tool.uv.sources]
-pymeshlab = { path = "../building-simp-mono/scripts/wheels/pymeshlab-2025.7-cp312-cp312-manylinux_2_35_x86_64.whl" }
 torch = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
 torchvision = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
 
