@@ -21,7 +21,7 @@ python -m pip install rapidobj
 From source:
 
 ```bash
-uv sync
+uv sync --no-dev
 uv build --wheel --python 3.12 --no-sources
 python -m pip install dist/rapidobj-0.1.3-cp312-cp312-*.whl
 ```

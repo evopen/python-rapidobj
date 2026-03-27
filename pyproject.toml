@@ -67,7 +67,6 @@ sdist.exclude = [
     "main.cpp",
     "main.py",
     "out.ipc",
-    "uv.lock",
 ]
 
 [tool.cibuildwheel]

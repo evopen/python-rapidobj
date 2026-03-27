@@ -21,8 +21,8 @@ jobs:
           enable-cache: true
           version: "0.10.8"
 
-      - name: Sync runtime dependencies
-        run: uv sync --frozen
+      - name: Install project
+        run: uv sync --no-dev
 
       - name: Run pyright
         run: uvx pyright

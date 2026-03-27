@@ -4,3 +4,4 @@ dist/
 benchmark
 *.ipc
 __pycache__
+uv.lock
