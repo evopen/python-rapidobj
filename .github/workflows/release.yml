@@ -23,7 +23,7 @@ jobs:
           version: "0.10.8"
 
       - name: Sync runtime dependencies
-        run: uv sync --locked
+        run: uv sync --frozen
 
       - name: Run pyright
         run: uvx pyright
