@@ -4,8 +4,8 @@ project(rapidobj LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find Python and nanobind
-find_package(Python 3.12 COMPONENTS Interpreter Development.Module REQUIRED)
+# Bind against whichever interpreter the build frontend selected.
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
 
 # Fetch nanobind
 include(FetchContent)

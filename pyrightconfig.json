@@ -3,7 +3,8 @@
     "rapidobj.pyi",
     "examples",
     "benchmark.py",
-    "benchmark_overhead.py"
+    "benchmark_overhead.py",
+    "tests/smoke_test.py"
   ],
   "exclude": [
     "build",

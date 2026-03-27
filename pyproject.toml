@@ -14,6 +14,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: C++",
     "Topic :: Multimedia :: Graphics :: 3D Modeling",
     "Typing :: Typed",
@@ -35,7 +37,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["scikit-build-core>=0.10", "nanobind>=2.4.0"]
+requires = ["scikit-build-core>=0.12", "nanobind>=2.4.0"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
@@ -54,6 +56,7 @@ sdist.include = [
     "rapidobj.pyi",
     "src/rapidobj.hpp",
     "src/rapidobj_ext.cpp",
+    "tests/smoke_test.py",
 ]
 sdist.exclude = [
     ".git/*",
@@ -87,3 +90,15 @@ torchvision = [{ index = "pytorch-cu129", marker = "sys_platform == 'linux'" }]
 name = "pytorch-cu129"
 url = "https://download.pytorch.org/whl/cu129"
 explicit = true
+
+[tool.cibuildwheel]
+build = "cp312-* cp313-* cp314-*"
+skip = "pp* *-musllinux_*"
+build-verbosity = 1
+test-command = "python {project}/tests/smoke_test.py"
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64"]
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
