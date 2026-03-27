@@ -22,7 +22,8 @@ python -m pip install dist/rapidobj-0.1.0-cp312-cp312-*.whl
 
 For release builds, GitHub Actions is the authoritative wheel pipeline. Pull
 requests validate the package, and version tags build Linux and Windows wheels
-for CPython 3.12, 3.13, and 3.14.
+for CPython 3.12, 3.13, and 3.14. Tag builds also publish the validated
+artifacts to TestPyPI via Trusted Publishing.
 
 ## Minimal Usage
 

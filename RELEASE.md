@@ -32,6 +32,7 @@ Use semantic version tags: `vX.Y.Z`.
    - build Linux and Windows wheel artifacts
    - run metadata checks and smoke tests
    - upload artifacts to GitHub Actions
+   - publish those exact artifacts to TestPyPI via Trusted Publishing
 
 ## GitHub Source Release
 
@@ -42,8 +43,14 @@ Use semantic version tags: `vX.Y.Z`.
 3. Wait for the release workflow to finish and download the generated artifacts if needed.
 4. Create GitHub release from the tag and include changelog notes.
 
+## TestPyPI Publish
+
+1. Configure a Trusted Publisher for the repository on TestPyPI.
+2. Push a version tag (`vX.Y.Z`).
+3. Wait for the `Release Artifacts` workflow to finish.
+4. Verify the package page and an install from TestPyPI.
+
 ## PyPI Publish
 
-1. Upload validated artifacts from the GitHub release workflow:
-   - `uvx --from twine twine upload dist/*`
-2. Verify package page metadata and install command.
+1. After TestPyPI validation, point the publish job at production PyPI.
+2. Reuse the same tag-triggered artifact publish flow with Trusted Publishing.
